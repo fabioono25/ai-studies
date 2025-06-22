@@ -268,6 +268,213 @@ random_integers = np.random.randint(1, 10, size=(3, 3))  # Random integers
 random_normal = np.random.randn(3, 3)         # Normal distribution
 ```
 
+### 🐼 Pandas Data Manipulation
+**File:** [`2-pandas.py`](2-Data%20Science%20Essentials/2-pandas.py)
+
+**Concepts Covered:**
+- **Series and DataFrames**: fundamental pandas data structures
+- **Data Loading**: reading CSV and Excel files
+- **Data Inspection**: head(), tail(), info(), describe()
+- **Data Selection**: accessing columns, rows, and specific cells
+- **Data Filtering**: conditional selection and boolean indexing
+- **File Operations**: saving data to CSV and Excel formats
+
+**Key Examples:**
+```python
+import pandas as pd
+
+# Creating Series and DataFrames
+s = pd.Series([1, 2, 3, 4, 5], index=['a', 'b', 'c', 'd', 'e'])
+df = pd.DataFrame({'Name': ['Alice', 'Bob'], 'Age': [25, 30]})
+
+# Loading data
+df_csv = pd.read_csv('data.csv')
+df_excel = pd.read_excel('data.xlsx')
+
+# Data inspection
+print(df.head())        # First 5 rows
+print(df.info())        # DataFrame structure
+print(df.describe())    # Summary statistics
+
+# Data selection and filtering
+print(df['Name'])                    # Single column
+print(df[['Name', 'Age']])          # Multiple columns
+print(df[df['Age'] > 30])           # Conditional filtering
+print(df.iloc[0])                   # Row by index
+
+# Saving data
+df.to_csv('output.csv', index=False)
+df.to_excel('output.xlsx', index=False)
+```
+
+### 🧹 Data Cleaning
+**File:** [`3-data-cleaning.py`](2-Data%20Science%20Essentials/3-data-cleaning.py)
+
+**Concepts Covered:**
+- **Missing Value Handling**: dropna(), fillna(), interpolation methods
+- **Data Imputation**: mean, median, mode replacement strategies
+- **Data Transformation**: renaming columns, type conversion, string operations
+- **DataFrame Operations**: creating new columns, applying functions
+- **Data Merging**: concat(), merge(), join() operations
+- **Forward/Backward Fill**: propagating values to handle missing data
+
+**Key Examples:**
+```python
+import pandas as pd
+import numpy as np
+
+# Handling missing values
+df = df.dropna()                                    # Drop rows with NaN
+df = df.fillna(0)                                  # Fill NaN with 0
+df["column"] = df["column"].fillna(df["column"].mean())  # Fill with mean
+
+# Data transformation
+df.rename(columns={'old_name': 'new_name'}, inplace=True)
+df["column"] = df["column"].astype(int)            # Change data type
+df["column"] = df["column"].str.lower()            # String operations
+
+# Creating new columns
+df["new_column"] = df["existing_column"] * 2
+df["new_column"] = df["column"].apply(lambda x: x * 2)
+
+# Merging DataFrames
+df_merged = pd.merge(df1, df2, on='common_column', how='inner')
+df_combined = pd.concat([df1, df2], axis=0)        # Concatenate rows
+```
+
+### 📊 Data Aggregation and Grouping
+**File:** [`4-aggregation-grouping.py`](2-Data%20Science%20Essentials/4-aggregation-grouping.py)
+
+**Concepts Covered:**
+- **GroupBy Operations**: grouping data by categorical variables
+- **Aggregation Functions**: sum, mean, count, custom functions
+- **Multiple Aggregations**: applying different functions to different columns
+- **Pivot Tables**: summarizing data with pivot_table()
+- **Custom Aggregation**: creating user-defined aggregation functions
+- **Group Iteration**: iterating through grouped data
+
+**Key Examples:**
+```python
+import pandas as pd
+
+# Basic grouping
+df = pd.DataFrame({
+    'City': ['New York', 'Los Angeles', 'New York', 'Chicago'],
+    'Age': [25, 30, 35, 40]
+})
+
+# Group operations
+grouped = df.groupby('City')['Age'].mean()         # Mean age by city
+grouped_multi = df.groupby('City').agg({
+    'Age': ['mean', 'sum', 'count']
+}).reset_index()
+
+# Custom aggregation function
+def age_range(x):
+    return x.max() - x.min()
+
+custom_agg = df.groupby('City')['Age'].agg(age_range)
+
+# Pivot tables
+pivot = df.pivot_table(index='City', values='Age', aggfunc='mean')
+
+# Group iteration
+for name, group in df.groupby('City'):
+    print(f"Group: {name}")
+    print(group)
+```
+
+### 📈 Data Visualization
+**File:** [`5-data-visualization.py`](2-Data%20Science%20Essentials/5-data-visualization.py)
+
+**Concepts Covered:**
+- **Matplotlib Basics**: line plots, bar charts, histograms, scatter plots
+- **Plot Customization**: colors, markers, labels, legends, grids
+- **Seaborn Integration**: statistical visualization library
+- **Heatmaps**: correlation matrices and data intensity visualization
+- **Plot Styling**: themes, color palettes, and aesthetics
+- **Multiple Plot Types**: combining different visualization techniques
+
+**Key Examples:**
+```python
+import matplotlib.pyplot as plt
+import seaborn as sns
+import numpy as np
+
+# Basic plots
+x = [1, 2, 3, 4, 5]
+y = [20, 35, 30, 35, 27]
+
+plt.plot(x, y, marker='o', color='blue')        # Line plot
+plt.bar(x, y, color='green')                    # Bar chart
+plt.hist(data, bins=30, color='blue')           # Histogram
+plt.scatter(x, y, color='red', alpha=0.5)       # Scatter plot
+
+# Seaborn visualizations
+data = np.random.rand(5, 5)
+sns.heatmap(data, annot=True, cmap='coolwarm')   # Heatmap
+sns.pairplot(pd.DataFrame(data))                 # Pairplot
+
+# Plot customization
+plt.xlabel('X-axis')
+plt.ylabel('Y-axis')
+plt.title('Plot Title')
+plt.legend(['Data'])
+plt.grid(True)
+plt.show()
+```
+
+### 🔍 Exploratory Data Analysis (EDA)
+**File:** [`6-eda.py`](2-Data%20Science%20Essentials/6-eda.py)
+
+**Concepts Covered:**
+- **Complete EDA Pipeline**: from data loading to insights generation
+- **Real Dataset Analysis**: Titanic dataset exploration
+- **Data Cleaning in Practice**: handling missing values in real data
+- **Statistical Analysis**: survival rates, correlations, distributions
+- **Advanced Visualizations**: multi-variable plots, color-coded scatter plots
+- **Pattern Recognition**: identifying relationships and anomalies
+- **Report Generation**: summarizing findings and saving cleaned data
+
+**Key Examples:**
+```python
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load real dataset
+df = pd.read_csv('https://raw.githubusercontent.com/datasciencedojo/datasets/refs/heads/master/titanic.csv')
+
+# Data cleaning
+df["Age"].fillna(df["Age"].median(), inplace=True)
+df["Embarked"].fillna(df["Embarked"].mode()[0], inplace=True)
+df.drop_duplicates(inplace=True)
+
+# Statistical analysis
+survival_rate = df['Survived'].mean()
+age_distribution = df['Age'].describe()
+class_survival = df.groupby('Pclass')['Survived'].mean()
+
+# Visualizations
+# Survival rate by class
+survival_rate_by_class.plot(kind='bar')
+plt.title('Survival Rate by Class')
+
+# Age vs Fare scatter plot
+plt.scatter(df['Age'], df['Fare'], c=df['Survived'], cmap='coolwarm')
+plt.title('Age vs Fare (Color = Survival)')
+
+# Summary report
+summary = {
+    "Total Passengers": len(df),
+    "Survival Rate": df['Survived'].mean(),
+    "Average Age": df['Age'].mean()
+}
+
+# Save cleaned data
+df.to_csv('cleaned_titanic_data.csv', index=False)
+```
+
 ---
 
 ## Getting Started
@@ -286,7 +493,7 @@ random_normal = np.random.randn(3, 3)         # Normal distribution
 
 2. Install required packages:
    ```bash
-   pip install numpy
+   pip install numpy pandas matplotlib seaborn openpyxl
    ```
 
 3. Run any Python file:
@@ -319,8 +526,17 @@ ai-studies/
 │   ├── input.txt              # Sample input file
 │   └── output.txt             # Generated output file
 ├── 2-Data Science Essentials/
-│   └── 1-numpy.py             # NumPy arrays and operations
-└── README.md                   # This file
+│   ├── 1-numpy.py             # NumPy arrays and operations
+│   ├── 2-pandas.py            # Pandas DataFrames and data manipulation
+│   ├── 3-data-cleaning.py     # Data cleaning and transformation
+│   ├── 4-aggregation-grouping.py # Data aggregation and grouping
+│   ├── 5-data-visualization.py   # Matplotlib and Seaborn visualizations
+│   ├── 6-eda.py               # Exploratory Data Analysis with Titanic dataset
+│   └── data.csv               # Sample dataset for practice
+├── data.csv                   # Main dataset (student data)
+├── data.xlsx                  # Excel version of dataset
+├── cleaned_titanic_data.csv   # Cleaned Titanic dataset (generated)
+└── README.md                  # This comprehensive guide
 ```
 
 ---
@@ -332,11 +548,30 @@ ai-studies/
 2. Practice each concept in the interactive notebook
 3. Experiment with the provided examples
 4. Move to **Chapter 2** once comfortable with Python fundamentals
+5. Begin with **NumPy** for numerical computing foundation
+6. Progress through **Pandas** for data manipulation
+7. Practice **Data Cleaning** techniques with real datasets
 
 ### For Intermediate Learners:
 1. Review **Pythonic Code** concepts first
 2. Focus on **Collections** and **String Manipulation**
 3. Dive deep into **NumPy** for data science foundation
+4. Master **Pandas** for professional data analysis
+5. Learn **Data Visualization** for effective communication
+6. Apply **EDA** techniques to real-world datasets
+
+### For Data Science Track:
+1. **NumPy Fundamentals** → **Pandas Data Manipulation** → **Data Cleaning**
+2. **Aggregation & Grouping** → **Data Visualization** → **Exploratory Data Analysis**
+3. Practice with the provided datasets (student data, Titanic dataset)
+4. Create your own data analysis projects
+
+### Recommended Resources by Topic:
+- **NumPy**: Array operations, broadcasting, statistical functions
+- **Pandas**: DataFrames, file I/O, data selection and filtering
+- **Data Cleaning**: Missing values, data transformation, merging
+- **Visualization**: Matplotlib basics, Seaborn statistical plots
+- **EDA**: Real dataset analysis, pattern recognition, reporting
 
 ---
 
@@ -352,10 +587,30 @@ Feel free to contribute by:
 
 ## Resources
 
+### Official Documentation:
 - [Python Official Documentation](https://docs.python.org/3/)
 - [NumPy Documentation](https://numpy.org/doc/)
+- [Pandas Documentation](https://pandas.pydata.org/docs/)
+- [Matplotlib Documentation](https://matplotlib.org/stable/contents.html)
+- [Seaborn Documentation](https://seaborn.pydata.org/)
+
+### Learning Resources:
 - [PEP 8 - Python Style Guide](https://peps.python.org/pep-0008/)
 - [Real Python Tutorials](https://realpython.com/)
+- [Pandas Getting Started](https://pandas.pydata.org/getting_started.html)
+- [Matplotlib Tutorials](https://matplotlib.org/stable/tutorials/index.html)
+
+### Sample Datasets:
+- Student Data: `data.csv` - Basic demographic and performance data
+- Titanic Dataset: Used in EDA examples - Classic ML dataset for survival analysis
+- Generated Files: Various CSV/Excel files created during exercises
+
+### Data Science Workflow:
+1. **Data Collection** → Load data with pandas
+2. **Data Cleaning** → Handle missing values, transform data
+3. **Data Exploration** → Use groupby, aggregation, visualization
+4. **Data Analysis** → Apply statistical methods, create insights
+5. **Data Communication** → Create reports, visualizations, summaries
 
 ---
 
